@@ -51,12 +51,12 @@
     },
     // 发送ajax请求
     ajax: function (obj) {
-      obj = obj || {}
+      obj = obj || {};
       var url = obj.url || '';
       var option = obj.option || '';
       var callback = obj.callback || '';
       var type = obj.type || 'GET';
-      var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("");;
+      var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("");
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
           callback(xhr.responseText);
@@ -70,25 +70,44 @@
         xhr.send(JSON.stringify(option));
       }
     }
-  }
+  };
 
+  // 参数对象
+  var params = {};
   // PV事件
   function listenPV(isDev) {
-    var params = {
+    params = {
       terminal: 'WEB',
-      Event: 'PV',
+      eventName: 'PV',
       pageUrl: window.location.href,
       referer: ApexAnalysis.getCookie('s7') || '',
-      cmpid: ApexAnalysis.getQueryString('cmpid'),
-      inpid: ApexAnalysis.getQueryString('inpid'),
-      OS: ApexAnalysis.getCookie('s1') || '',
+      pageSource: {
+        cmpid: ApexAnalysis.getQueryString('cmpid'),
+        inpid: ApexAnalysis.getQueryString('inpid')
+      },
+      os: ApexAnalysis.getCookie('s1') || '',
       Language: ApexAnalysis.getCookie('s3') || '',
       version: ApexAnalysis.getCookie('s2') || '',
       pvId: ApexAnalysis.getCookie('s5') || '',
       visitorId: ApexAnalysis.getCookie('s6') || '',
       visitId: ApexAnalysis.getCookie('s4') || '',
-      userId: ApexAnalysis.getCookie('u1') || ''
-    }
+      userId: ApexAnalysis.getCookie('u1') || '',
+      address: {
+        ip: ''
+      },
+      executionTime: ApexAnalysis.getFormatTime(),
+      targetPath: '',
+      screen: {
+        clientX: '',
+        clientY:'',
+        screenWidth: Math.round(screen.availWidth) || '',
+        screenHeight: Math.round(screen.availHeight) || '',
+        pageX: '',
+        pageY: '',
+        offsetLeft: '',
+        offsetTop:  ''
+      }
+    };
     // 上传数据
     // ApexAnalysis.ajax({
     //   type: 'POST',
@@ -102,7 +121,7 @@
     // 开发环境输出参数
     if(!!isDev) {
       console.log(params)
-    };
+    }
   }
 
   // EVENT 监听
@@ -116,11 +135,11 @@
     }
     // 注册事件
     // a 标签
-    getEle('a', 'click')
+    getEle('a', 'click');
     // input 标签
-    getEle('input', 'click')
+    getEle('input', 'click');
     // button 标签
-    getEle('button', 'click')
+    getEle('button', 'click');
 
     // 兼容ie
     function addEvent(element, eventType) {
@@ -149,24 +168,26 @@
           targetElementList.push(ele.parentNode);
           ele = ele.parentNode;
         }
-        var params = {
-          terminal: 'WEB',
-          targetPath: targetElementList,
-          eventName: eventType + '_' + element.tagName.toLowerCase() + '_' + targetClass + '_' + targetAttr,
-          e_time: ApexAnalysis.getFormatTime(),
-          userId: ApexAnalysis.getCookie('u1') || '',
+        var paramsEvent = {};
+        for (var k in params) {
+          paramsEvent[k] = params[k];
+        }
+        paramsEvent.targetPath = targetElementList;
+        paramsEvent.eventName = eventType + '_' + element.tagName.toLowerCase() + '_' + targetClass + '_' + targetAttr,
+        paramsEvent.executionTime = ApexAnalysis.getFormatTime();
+        paramsEvent.screen = {
           clientX: Math.round(e.clientX) || '',
           clientY: Math.round(e.clientY) || '',
-          screenX: Math.round(e.screenX) || '',
-          screenY: Math.round(e.screenY) || '',
+          screenWidth: Math.round(screen.availWidth) || '',
+          screenHeight: Math.round(screen.availHeight) || '',
           pageX: e.pageX ? Math.round(e.pageX) :
             Math.round(e.clientX + (document.documentElement.scrollLeft ?
-            document.documentElement.scrollLeft : document.body.scrollLeft)) || '',
+              document.documentElement.scrollLeft : document.body.scrollLeft)) || '',
           pageY: e.pageY ? Math.round(e.pageY) :
             Math.round(e.clientY + (document.documentElement.scrollLeft ?
-              document.documentElement.scrollLeft : document.body.scrollHeight)) || '' || '',
-          offsetX: Math.round(e.offsetX) || '',
-          offsetY: Math.round(e.offsetY) || ''
+              document.documentElement.scrollLeft : document.body.scrollHeight)) || '',
+          offsetLeft: Math.round(e.offsetX) || '',
+          offsetTop: Math.round(e.offsetY) || ''
         };
         // 上传数据
         // ApexAnalysis.ajax({
@@ -180,8 +201,8 @@
 
         // 开发环境输出参数
         if(!!isDev) {
-          console.log(params)
-        };
+          console.log(paramsEvent)
+        }
       }
     }
 }
@@ -196,4 +217,4 @@
     }
   }
   window.autoTrigger = autoTrigger;
-})(window)
+})(window);
