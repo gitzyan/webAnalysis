@@ -1,4 +1,5 @@
 ;(function (window) {
+  var src = "https://lc.ch.com/self/CollectV2";
   // 公共方法
   var ApexAnalysis = {
     //获取cookie
@@ -81,10 +82,12 @@
       eventName: 'PV',
       pageUrl: window.location.href,
       referer: ApexAnalysis.getCookie('s7') || '',
-      pageSource: {
-        cmpid: ApexAnalysis.getQueryString('cmpid'),
-        inpid: ApexAnalysis.getQueryString('inpid')
-      },
+      // pageSource: {
+      //   cmpid: ApexAnalysis.getQueryString('cmpid'),
+      //   inpid: ApexAnalysis.getQueryString('inpid')
+      // },
+      cmpid: ApexAnalysis.getQueryString('cmpid'),
+      inpid: ApexAnalysis.getQueryString('inpid'),
       os: ApexAnalysis.getCookie('s1') || '',
       Language: ApexAnalysis.getCookie('s3') || '',
       version: ApexAnalysis.getCookie('s2') || '',
@@ -92,37 +95,51 @@
       visitorId: ApexAnalysis.getCookie('s6') || '',
       visitId: ApexAnalysis.getCookie('s4') || '',
       userId: ApexAnalysis.getCookie('u1') || '',
-      address: {
-        ip: ''
-      },
+      // address: {
+      //   ip: ''
+      // },
+      ip: '',
       executionTime: ApexAnalysis.getFormatTime(),
       targetPath: '',
-      screen: {
-        clientX: '',
-        clientY:'',
-        screenWidth: Math.round(screen.availWidth) || '',
-        screenHeight: Math.round(screen.availHeight) || '',
-        pageX: '',
-        pageY: '',
-        offsetLeft: '',
-        offsetTop:  ''
-      }
+      clientX: '',
+      clientY:'',
+      screenWidth: Math.round(screen.availWidth) || '',
+      screenHeight: Math.round(screen.availHeight) || '',
+      pageX: '',
+      pageY: '',
+      offsetLeft: '',
+      offsetTop:  ''
     };
-    // 上传数据
-    // ApexAnalysis.ajax({
-    //   type: 'POST',
-    //   url: 'http://api.apiopen.top/singlePoetry',
-    //   option: params,
-    //   callback: function (data) {
-    //     console.log(data);
-    //   }
-    // })
 
     // 开发环境输出参数
     if(!!isDev) {
       console.log(params)
     }
+    send(params);
   }
+
+  function send(params) {
+    var mysrc = src;
+    var img = {};
+
+    //避免被垃圾回收机制回收造成的流量损失
+    var salt = (new Date()).getTime() + Math.random();
+    window[salt] = img = new Image();
+    img.src = mysrc + "?" + urlFormat(params);
+    img.onload = img.onerror = function () {
+        //回收对象
+        window[salt] = null;
+        img = null;
+    };
+  }
+
+   function urlFormat(values) {
+        let parameter = "";
+        for (let prop in values) {
+          parameter += prop + "=" +  encodeURIComponent(values[prop]) + "&";
+        }
+        return parameter;
+    }
 
   // EVENT 监听
   function listenTags(isDev) {
@@ -175,34 +192,24 @@
         paramsEvent.targetPath = targetElementList;
         paramsEvent.eventName = eventType + '_' + element.tagName.toLowerCase() + '_' + targetClass + '_' + targetAttr,
         paramsEvent.executionTime = ApexAnalysis.getFormatTime();
-        paramsEvent.screen = {
-          clientX: Math.round(e.clientX) || '',
-          clientY: Math.round(e.clientY) || '',
-          screenWidth: Math.round(screen.availWidth) || '',
-          screenHeight: Math.round(screen.availHeight) || '',
-          pageX: e.pageX ? Math.round(e.pageX) :
+        paramsEvent.clientX =  Math.round(e.clientX) || '';
+        paramsEvent.clientY = Math.round(e.clientY) || '';
+        paramsEvent.screenWidth = Math.round(screen.availWidth) || '';
+        paramsEvent.screenHeight = Math.round(screen.availHeight) || '';
+        paramsEvent.pageX =  e.pageX ? Math.round(e.pageX) :
             Math.round(e.clientX + (document.documentElement.scrollLeft ?
-              document.documentElement.scrollLeft : document.body.scrollLeft)) || '',
-          pageY: e.pageY ? Math.round(e.pageY) :
+              document.documentElement.scrollLeft : document.body.scrollLeft)) || '';
+        paramsEvent.pageY = e.pageY ? Math.round(e.pageY) :
             Math.round(e.clientY + (document.documentElement.scrollLeft ?
-              document.documentElement.scrollLeft : document.body.scrollHeight)) || '',
-          offsetLeft: Math.round(e.offsetX) || '',
-          offsetTop: Math.round(e.offsetY) || ''
-        };
-        // 上传数据
-        // ApexAnalysis.ajax({
-        //   type: 'POST',
-        //   url: 'http://api.apiopen.top/singlePoetry',
-        //   option: params,
-        //   callback: function (data) {
-        //     console.log(data);
-        //   }
-        // })
+              document.documentElement.scrollLeft : document.body.scrollHeight)) || '';
+        paramsEvent.offsetLeft = Math.round(e.offsetX) || '';
+        paramsEvent.offsetTop = Math.round(e.offsetY) || '';
 
         // 开发环境输出参数
         if(!!isDev) {
-          console.log(paramsEvent)
+          console.log(paramsEvent);
         }
+        send(paramsEvent);
       }
     }
 }
@@ -214,6 +221,10 @@
     if(!!analysis){
       listenPV(isDev);
       listenTags(isDev);
+    }
+
+    if (!!isDev) {
+      console.log("this is a test environment");
     }
   }
   window.autoTrigger = autoTrigger;
