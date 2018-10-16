@@ -78,14 +78,11 @@
   // PV事件
   function listenPV(isDev) {
     params = {
+      third: 'apex',
       terminal: 'WEB',
       eventName: 'PV',
       pageUrl: window.location.href,
       referer: ApexAnalysis.getCookie('s7') || '',
-      // pageSource: {
-      //   cmpid: ApexAnalysis.getQueryString('cmpid'),
-      //   inpid: ApexAnalysis.getQueryString('inpid')
-      // },
       cmpid: ApexAnalysis.getQueryString('cmpid'),
       inpid: ApexAnalysis.getQueryString('inpid'),
       os: ApexAnalysis.getCookie('s1') || '',
@@ -95,9 +92,6 @@
       visitorId: ApexAnalysis.getCookie('s6') || '',
       visitId: ApexAnalysis.getCookie('s4') || '',
       userId: ApexAnalysis.getCookie('u1') || '',
-      // address: {
-      //   ip: ''
-      // },
       ip: '',
       executionTime: ApexAnalysis.getFormatTime(),
       targetPath: '',
