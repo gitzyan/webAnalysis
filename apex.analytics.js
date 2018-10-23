@@ -94,7 +94,6 @@
       userId: ApexAnalysis.getCookie('u1') || '',
       ip: '',
       executionTime: ApexAnalysis.getFormatTime(),
-      targetPath: '',
       clientX: '',
       clientY:'',
       screenWidth: Math.round(screen.availWidth) || '',
@@ -173,17 +172,10 @@
         } else {
           targetAttr = ele.innerText || '';
         }
-        // 追溯路径
-        var targetElementList = [ele];
-        while (ele.parentNode && ele.parentNode !== 'body') {
-          targetElementList.push(ele.parentNode);
-          ele = ele.parentNode;
-        }
         var paramsEvent = {};
         for (var k in params) {
           paramsEvent[k] = params[k];
         }
-        paramsEvent.targetPath = targetElementList;
         paramsEvent.eventName = eventType + '_' + element.tagName.toLowerCase() + '_' + targetClass + '_' + targetAttr,
         paramsEvent.executionTime = ApexAnalysis.getFormatTime();
         paramsEvent.clientX =  Math.round(e.clientX) || '';
