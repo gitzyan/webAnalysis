@@ -82,7 +82,7 @@
       terminal: 'WEB',
       eventName: 'PV',
       pageUrl: window.location.href,
-      referer: ApexAnalysis.getCookie('s7') || '',
+      referer: ApexAnalysis.getCookie('s7') || document.referrer || '',
       cmpid: ApexAnalysis.getQueryString('cmpid'),
       inpid: ApexAnalysis.getQueryString('inpid'),
       os: ApexAnalysis.getCookie('s1') || '',

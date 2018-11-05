@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .cell {
+      width: 100px;
+      height: 50px;
+      border: 1px solid #000;
+      line-height: 50px;
+      text-align: center;
+    }
+    #search-submit {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script src="../miniProgram/utils/apex_statistics.config.js"></script>
+</head>
+<body>
+hello apex
+<div>
+  <ul>
+    <li><a href="file:///E:/webAnalysis/index.html">跳转1</a></li>
+  </ul>
+</div>
+<br>
+<a href="javascript: ">跳转2</a>
+<br>
+<a href="javascript: ">跳转3</a>
+<br>
+<a href="javascript: ">跳转4</a>
+<br>
+<input type="text" name="text" >
+<br>
+<input type="text" name="password" >
+<br>
+<button class="btn submit">按钮</button>
+<button class="btn2">按钮2</button>
+<div>
+  <div>
+    <div>
+      <div class="cell ctrl">
+        <a href="javascript:void(0);" class="bn home-pc-search-submit" id="search-submit">搜索</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./apex.analytics.js"></script>
+<script>
+  window.autoTrigger(true, true)
+</script>
+</body>
+</html>
